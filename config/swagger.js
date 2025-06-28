@@ -308,6 +308,15 @@ const options = {
               description: 'Error message'
             }
           }
+        },
+        Message: {
+          type: 'object',
+          properties: {
+            message: {
+              type: 'string',
+              description: 'A message describing the result.'
+            }
+          }
         }
       }
     }

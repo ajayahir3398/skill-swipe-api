@@ -16,11 +16,11 @@ const jwt = require('jsonwebtoken');
  *             $ref: '#/components/schemas/RegisterRequest'
  *     responses:
  *       201:
- *         description: User created successfully
+ *         description: User registered successfully
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/User'
+ *               $ref: '#/components/schemas/Message'
  *       400:
  *         description: Bad request
  *         content:
@@ -32,8 +32,8 @@ const registerUser = async (req, res) => {
   const { name, email, password } = req.body;
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = await User.create({ name, email, password: hashedPassword });
-    res.status(201).json(newUser);
+    await User.create({ name, email, password: hashedPassword });
+    res.status(201).json({ message: 'User registered successfully' });
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
@@ -59,6 +59,9 @@ const registerUser = async (req, res) => {
  *             schema:
  *               type: object
  *               properties:
+ *                 message:
+ *                   type: string
+ *                   description: Success message
  *                 token:
  *                   type: string
  *                   description: JWT token
@@ -93,7 +96,7 @@ const loginUser = async (req, res) => {
     if (!isMatch) return res.status(401).json({ error: 'Invalid password' });
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
-    res.json({ token, user });
+    res.json({ message: 'Login successful', token, user });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
