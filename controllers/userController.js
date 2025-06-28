@@ -237,9 +237,68 @@ const updateProfile = async (req, res) => {
   }
 };
 
+// /**
+//  * @swagger
+//  * /api/users/get-token:
+//  *   post:
+//  *     summary: Get access token for user
+//  *     tags: [Users]
+//  *     requestBody:
+//  *       required: true
+//  *       content:
+//  *         application/json:
+//  *           schema:
+//  *             $ref: '#/components/schemas/LoginRequest'
+//  *     responses:
+//  *       200:
+//  *         description: Token generated successfully
+//  *         content:
+//  *           application/json:
+//  *             schema:
+//  *               type: object
+//  *               properties:
+//  *                 token:
+//  *                   type: string
+//  *                   description: JWT token
+//  *       401:
+//  *         description: Invalid credentials
+//  *         content:
+//  *           application/json:
+//  *             schema:
+//  *               $ref: '#/components/schemas/Error'
+//  *       404:
+//  *         description: User not found
+//  *         content:
+//  *           application/json:
+//  *             schema:
+//  *               $ref: '#/components/schemas/Error'
+//  *       500:
+//  *         description: Server error
+//  *         content:
+//  *           application/json:
+//  *             schema:
+//  *               $ref: '#/components/schemas/Error'
+//  */
+const getToken = async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const user = await User.findOne({ email });
+    if (!user) return res.status(404).json({ error: 'User not found' });
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) return res.status(401).json({ error: 'Invalid password' });
+
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
+    res.json({ token });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
 module.exports = {
   registerUser,
   loginUser,
   getProfile,
-  updateProfile
+  updateProfile,
+  getToken
 }; 

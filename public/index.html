@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skill Swipe API - Get Access Token</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            display: none;
+        }
+
+        .result.show {
+            display: block;
+        }
+
+        .result h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .token-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid #e1e5e9;
+        }
+
+        .token {
+            flex: 1;
+            word-break: break-all;
+            font-family: 'Courier New', monospace;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .copy-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.2s ease;
+        }
+
+        .copy-btn:hover {
+            background: #218838;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .error.show {
+            display: block;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive styles for mobile */
+        @media (max-width: 600px) {
+            .container {
+                padding: 18px 8px;
+                max-width: 100%;
+                border-radius: 0;
+                box-shadow: none;
+            }
+            .header h1 {
+                font-size: 1.5em;
+            }
+            .header p {
+                font-size: 1em;
+            }
+            .btn, .copy-btn {
+                font-size: 15px;
+                padding: 12px;
+            }
+            .result {
+                padding: 12px;
+                margin-top: 18px;
+            }
+            .token-container {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 6px;
+                padding: 10px;
+            }
+            .token {
+                font-size: 13px;
+            }
+            input {
+                font-size: 15px;
+                padding: 10px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔐 Skill Swipe API</h1>
+            <p>Get your access token to start using the API</p>
+        </div>
+
+        <form id="tokenForm">
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required placeholder="Enter your email">
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required placeholder="Enter your password">
+            </div>
+
+            <button type="submit" class="btn" id="getTokenBtn">Get Access Token</button>
+        </form>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Getting your token...</p>
+        </div>
+
+        <div class="error" id="error"></div>
+
+        <div class="result" id="result">
+            <h3>✅ Access Token Generated Successfully!</h3>
+            <div class="token-container">
+                <span class="token" id="tokenDisplay"></span>
+                <button class="copy-btn" id="copyBtn" onclick="copyToken()">
+                    📋 Copy
+                </button>
+            </div>
+            <button class="btn" id="goToDocsBtn" style="margin-top:20px; display:none;" onclick="goToDocs()">Go to API Docs</button>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('tokenForm');
+        const loading = document.getElementById('loading');
+        const result = document.getElementById('result');
+        const error = document.getElementById('error');
+        const tokenDisplay = document.getElementById('tokenDisplay');
+        const getTokenBtn = document.getElementById('getTokenBtn');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            // Show loading, hide other elements
+            loading.classList.add('show');
+            result.classList.remove('show');
+            error.classList.remove('show');
+            getTokenBtn.disabled = true;
+
+            try {
+                const response = await fetch('/api/users/get-token', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    tokenDisplay.textContent = data.token;
+                    result.classList.add('show');
+                } else {
+                    error.textContent = data.error || 'Failed to get token';
+                    error.classList.add('show');
+                }
+            } catch (err) {
+                error.textContent = 'Network error. Please try again.';
+                error.classList.add('show');
+            } finally {
+                loading.classList.remove('show');
+                getTokenBtn.disabled = false;
+            }
+        });
+
+        function copyToken() {
+            const token = tokenDisplay.textContent;
+            navigator.clipboard.writeText(token).then(() => {
+                const copyBtn = document.getElementById('copyBtn');
+                const originalText = copyBtn.textContent;
+                copyBtn.textContent = '✅ Copied!';
+                copyBtn.style.background = '#28a745';
+                document.getElementById('goToDocsBtn').style.display = 'block';
+                setTimeout(() => {
+                    copyBtn.textContent = originalText;
+                }, 1500);
+            }).catch(() => {
+                alert('Failed to copy token. Please copy manually.');
+            });
+        }
+
+        function goToDocs() {
+            window.location.href = '/api-docs/';
+        }
+    </script>
+</body>
+</html> 
