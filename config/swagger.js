@@ -285,21 +285,6 @@ const options = {
             }
           }
         },
-        SkillRequest: {
-          type: 'object',
-          required: ['type', 'skill'],
-          properties: {
-            type: {
-              type: 'string',
-              enum: ['offered', 'needed'],
-              description: 'Type of skill (offered or needed)'
-            },
-            skill: {
-              type: 'string',
-              description: 'Skill name'
-            }
-          }
-        },
         Error: {
           type: 'object',
           properties: {

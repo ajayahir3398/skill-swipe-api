@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -95,6 +96,12 @@
             transform: none;
         }
 
+        .btn-group {
+            display: flex;
+            flex-direction: row;
+            gap: 5px;
+        }
+
         .result {
             margin-top: 30px;
             padding: 20px;
@@ -180,8 +187,13 @@
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         /* Responsive styles for mobile */
@@ -192,29 +204,37 @@
                 border-radius: 0;
                 box-shadow: none;
             }
+
             .header h1 {
                 font-size: 1.5em;
             }
+
             .header p {
                 font-size: 1em;
             }
-            .btn, .copy-btn {
+
+            .btn,
+            .copy-btn {
                 font-size: 15px;
                 padding: 12px;
             }
+
             .result {
                 padding: 12px;
                 margin-top: 18px;
             }
+
             .token-container {
                 flex-direction: column;
                 align-items: stretch;
                 gap: 6px;
                 padding: 10px;
             }
+
             .token {
                 font-size: 13px;
             }
+
             input {
                 font-size: 15px;
                 padding: 10px 12px;
@@ -222,6 +242,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="header">
@@ -240,7 +261,10 @@
                 <input type="password" id="password" name="password" required placeholder="Enter your password">
             </div>
 
-            <button type="submit" class="btn" id="getTokenBtn">Get Access Token</button>
+            <div class="btn-group">
+                <button type="submit" class="btn" id="getTokenBtn">Get Access Token</button>
+                <button type="button" class="btn" onclick="goToDocs()">Go to API Docs</button>
+            </div>
         </form>
 
         <div class="loading" id="loading">
@@ -258,7 +282,6 @@
                     📋 Copy
                 </button>
             </div>
-            <button class="btn" id="goToDocsBtn" style="margin-top:20px; display:none;" onclick="goToDocs()">Go to API Docs</button>
         </div>
     </div>
 
@@ -272,7 +295,7 @@
 
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
-            
+
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
 
@@ -316,7 +339,6 @@
                 const originalText = copyBtn.textContent;
                 copyBtn.textContent = '✅ Copied!';
                 copyBtn.style.background = '#28a745';
-                document.getElementById('goToDocsBtn').style.display = 'block';
                 setTimeout(() => {
                     copyBtn.textContent = originalText;
                 }, 1500);
@@ -330,4 +352,5 @@
         }
     </script>
 </body>
-</html> 
+
+</html>

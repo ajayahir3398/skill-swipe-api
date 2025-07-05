@@ -10,7 +10,8 @@ dotenv.config();
 connectDB();
 
 const userRoutes = require('./routes/userRoutes');
-const skillRoutes = require('./routes/skillRoutes');
+const categoryRoutes = require('./routes/categoryRoutes');
+const subcategoryRoutes = require('./routes/subcategoryRoutes');
 
 const app = express();
 app.use(cors());
@@ -23,7 +24,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 
 app.use('/api/users', userRoutes);
-// app.use('/api/skills', skillRoutes);
+app.use('/api/categories', categoryRoutes);
+app.use('/api/subcategories', subcategoryRoutes);
 
 // Serve the token interface at root
 app.get('/', (req, res) => {
