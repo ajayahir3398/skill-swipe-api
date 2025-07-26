@@ -25,6 +25,11 @@ const authenticateToken = async (req, res, next) => {
       return res.status(401).json({ error: 'Invalid token - user not found' });
     }
 
+    // Check if token has been invalidated (logout)
+    if (user.invalidatedTokens && user.invalidatedTokens.includes(token)) {
+      return res.status(401).json({ error: 'Token has been invalidated. Please login again.' });
+    }
+
     // Add user to request object
     req.user = user;
     next();
@@ -53,7 +58,10 @@ const optionalAuth = async (req, res, next) => {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
       const user = await User.findById(decoded.id).select('-password');
       if (user) {
-        req.user = user;
+        // Check if token has been invalidated (logout)
+        if (!user.invalidatedTokens || !user.invalidatedTokens.includes(token)) {
+          req.user = user;
+        }
       }
     }
     next();

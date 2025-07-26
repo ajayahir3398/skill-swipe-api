@@ -62,7 +62,10 @@ const userSchema = new mongoose.Schema({
     issuer: String,
     dateObtained: Date,
     expiryDate: Date
-  }]
+  }],
+  
+  // Session Management
+  invalidatedTokens: [{ type: String }] // Store invalidated JWT tokens
 }, { 
   timestamps: true 
 });

@@ -5,6 +5,7 @@ const connectDB = require('./config/server');
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpecs = require('./config/swagger');
 const path = require('path');
+const { startCleanupScheduler } = require('./utils/tokenCleanup');
 
 dotenv.config();
 connectDB();
@@ -31,6 +32,9 @@ app.use('/api/subcategories', subcategoryRoutes);
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
+
+// Start the token cleanup scheduler
+startCleanupScheduler();
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
