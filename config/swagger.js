@@ -14,7 +14,7 @@ const options = {
     },
     servers: [
       {
-        url: 'https://skill-swipe-api-o7ci.onrender.com',
+        url: 'https://skill-swipe-api.onrender.com',
         description: 'Development server'
       }
     ],
